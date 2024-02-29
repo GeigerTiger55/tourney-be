@@ -33,4 +33,5 @@ app.config["SQLALCHEMY_ECHO"] = False
 app.config["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
 app.config["SECRET_KEY"] = os.environ["SECRET_KEY"]
 
+
 connect_db(app)
