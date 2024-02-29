@@ -1,9 +1,8 @@
 """SQLAlchemy models for Tourney app"""
 
-from datetime import datetime
-
 from flask_sqlalchemy import SQLAlchemy
 import bcrypt
+
 
 db = SQLAlchemy()
 
@@ -16,6 +15,7 @@ class User(db.Model):
     id = db.Column(
         db.Integer,
         primary_key=True,
+        autoincrement=True
     )
 
     email = db.Column(
@@ -34,6 +34,8 @@ class User(db.Model):
         db.Text,
         nullable=False
     )
+
+    
 
     def __repr__(self):
         return f"<User #{self.id}: {self.username}, {self.email}>"
@@ -84,7 +86,8 @@ class Team(db.Model):
 
     id = db.Column(
         db.Integer,
-        primary_key=True
+        primary_key=True,
+        autoincrement=True
     )
 
     name = db.Column(
@@ -99,7 +102,8 @@ class TeamMember(db.Model):
 
     id = db.Column(
         db.Integer,
-        primary_key=True
+        primary_key=True,
+        autoincrement=True
     )
 
     user_id = db.Column(
@@ -114,6 +118,18 @@ class TeamMember(db.Model):
         nullable=False
     )
 
+    team_owner = db.Column(
+        db.Boolean,
+        nullable=False,
+        default=False
+    )
+
+    team_admin_access = db.Column(
+        db.Boolean,
+        nullable=False,
+        default=False
+    )
+
 class Location(db.Model):
     """Location"""
 
@@ -121,7 +137,8 @@ class Location(db.Model):
 
     id = db.Column(
         db.Integer,
-        primary_key=True
+        primary_key=True,
+        autoincrement=True
     )
 
     location_name = db.Column(
@@ -144,7 +161,8 @@ class PlayType(db.Model):
 
     id = db.Column(
         db.Integer,
-        primary_key=True
+        primary_key=True,
+        autoincrement=True
     )
 
     name = db.Column(
@@ -164,7 +182,8 @@ class TournamentFormat(db.Model):
 
     id = db.Column(
         db.Integer,
-        primary_key=True
+        primary_key=True,
+        autoincrement=True
     )
 
     name = db.Column(
@@ -189,7 +208,8 @@ class Event(db.Model):
 
     id = db.Column(
         db.Integer,
-        primary_key=True
+        primary_key=True,
+        autoincrement=True
     )
 
     tournament_name = db.Column(
@@ -198,7 +218,7 @@ class Event(db.Model):
     )
 
     date = db.Column(
-        db.Datetime,
+        db.DateTime,
         nullable=False,
     )
 
@@ -229,11 +249,12 @@ class ArenaDetail(db.Model):
 
     id = db.Column(
         db.Integer,
-        primary_key=True
+        primary_key=True,
+        autoincrement=True
     )
 
     location_id = db.Column(
-        db.Interger,
+        db.Integer,
         db.ForeignKey('locations.id', ondelete="CASCADE")
     )
 
@@ -243,7 +264,7 @@ class ArenaDetail(db.Model):
     )
 
     capacity = db.Column(
-        db.Text
+        db.Integer
     )
 
 class Game(db.Model):
@@ -253,7 +274,8 @@ class Game(db.Model):
 
     id = db.Column(
         db.Integer,
-        primary_key=True
+        primary_key=True,
+        autoincrement=True
     )
 
     event_id = db.Column(
@@ -261,26 +283,31 @@ class Game(db.Model):
         db.ForeignKey('events.id', ondelete="CASCADE"),
     )
 
-    team1_id = db.Column(
+    arena_id = db.Column(
+        db.Integer,
+        db.ForeignKey('arena_details.id', ondelete="CASCADE")
+    )
+
+    home_team_id = db.Column(
         db.Integer,
         db.ForeignKey('teams.id', ondelete="CASCADE")
     )
 
-    team2_id = db.Column(
+    away_team_id = db.Column(
         db.Integer,
         db.ForeignKey('teams.id', ondelete="CASCADE"),
     )
 
-    game_type = db.Column(
+    tournament_type = db.Column(
         db.Integer,
         db.ForeignKey('tournament_formats.id', ondelete="CASCADE")
     )
 
-    team1_score = db.Column(
+    home_team_score = db.Column(
         db.Integer
     )
 
-    team2_score = db.Column(
+    away_team_score = db.Column(
         db.Integer
     )
 
